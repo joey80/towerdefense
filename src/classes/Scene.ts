@@ -4,45 +4,42 @@ import GameGrid from './GameGrid';
 import GameObject from './GameObject';
 import { collision } from '../util';
 
-// TODO: name this something else
-// export type GameObject = Cell | Defender | Enemy | Mouse;
-
 interface Scene extends GameObject {
   cellGap: number;
   cellSize: number;
+  config: GameObject;
   defenders: Array<Defender>;
   enemies: Array<Enemy>;
   enemiesInterval: number;
   enemyPositions: Array<number>;
   frame: number;
   gameGrid: GameGrid | null;
-  gameObject: GameObject;
   gameOver: boolean;
   numberOfResources: number;
   objectSize: number;
 }
 
-class Scene implements Scene {
-  constructor(gameObject: GameObject) {
+class Scene extends GameObject implements Scene {
+  constructor(config: GameObject) {
+    super(config);
     this.cellGap = 3;
     this.cellSize = 100;
+    this.config = config;
     this.defenders = [];
     this.enemies = [];
     this.enemiesInterval = 600;
     this.enemyPositions = [];
     this.frame = 0;
     this.gameGrid = null;
-    this.gameObject = gameObject;
     this.gameOver = false;
     this.numberOfResources = 300;
     this.objectSize = 100 - 3 * 2;
   }
 
   addListeners() {
-    const { canvas, mouse } = this.gameObject;
-    canvas.addEventListener('click', () => {
-      const gridPosX = mouse.x - (mouse.x % this.cellSize) + this.cellGap;
-      const gridPosY = mouse.y - (mouse.y % this.cellSize) + this.cellGap;
+    this.canvas.addEventListener('click', () => {
+      const gridPosX = this.mouse.x - (this.mouse.x % this.cellSize);
+      const gridPosY = this.mouse.y - (this.mouse.y % this.cellSize);
       const defenderCost = 100;
       if (gridPosY < this.cellSize) return;
 
@@ -54,21 +51,16 @@ class Scene implements Scene {
 
       // TODO: clean this up
       if (this.numberOfResources >= defenderCost) {
-        this.defenders.push(new Defender(this.gameObject, gridPosX, gridPosY, this.objectSize));
+        this.defenders.push(new Defender(this.config, gridPosX, gridPosY, this.objectSize));
         this.numberOfResources -= defenderCost;
       }
     });
   }
 
   animate() {
-    this.gameObject.ctx.clearRect(
-      0,
-      0,
-      this.gameObject.canvas.width,
-      this.gameObject.canvas.height
-    );
-    this.gameObject.ctx.fillStyle = 'blue';
-    this.gameObject.ctx.fillRect(0, 0, this.gameObject.canvas.width, this.cellSize);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = 'blue';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.cellSize);
     this.gameGrid?.drawObjects();
     this.handleDefenders();
     this.handleEnemies();
@@ -99,27 +91,27 @@ class Scene implements Scene {
     });
 
     if (this.frame % this.enemiesInterval === 0) {
-      const verticalPosition = Math.floor(Math.random() * 5 + 1) * this.cellSize + this.cellGap;
-      this.enemies.push(new Enemy(this.gameObject, verticalPosition, this.objectSize));
+      const verticalPosition = Math.floor(Math.random() * 5 + 1) * this.cellSize;
+      this.enemies.push(new Enemy(this.config, verticalPosition, this.objectSize));
       this.enemyPositions.push(verticalPosition);
       if (this.enemiesInterval > 120) this.enemiesInterval -= 50;
     }
   }
 
   handleGameStatus() {
-    this.gameObject.ctx.fillStyle = 'gold';
-    this.gameObject.ctx.font = '30px Arial';
-    this.gameObject.ctx.fillText(`Resources: ${this.numberOfResources}`, 20, 55);
+    this.ctx.fillStyle = 'gold';
+    this.ctx.font = '30px Arial';
+    this.ctx.fillText(`Resources: ${this.numberOfResources}`, 20, 55);
 
     if (this.gameOver) {
-      this.gameObject.ctx.fillStyle = 'black';
-      this.gameObject.ctx.font = '60px Arial';
-      this.gameObject.ctx.fillText('GAME OVER', 135, 330);
+      this.ctx.fillStyle = 'black';
+      this.ctx.font = '60px Arial';
+      this.ctx.fillText('GAME OVER', 135, 330);
     }
   }
 
   start() {
-    this.gameGrid = new GameGrid(this.gameObject, this.cellSize, this.objectSize);
+    this.gameGrid = new GameGrid(this.config, this.cellSize, this.objectSize, this.cellGap);
     this.gameGrid.createGrid();
     this.addListeners();
     this.animate();
