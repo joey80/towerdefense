@@ -15,14 +15,6 @@ class Mouse implements Mouse {
     this.y = 0;
   }
 
-  getXPos() {
-    return this.x;
-  }
-
-  getYPos() {
-    return this.y;
-  }
-
   start() {
     this.canvas.addEventListener('mousemove', (event) => {
       const canvasPosition = this.canvas.getBoundingClientRect();

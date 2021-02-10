@@ -2,6 +2,7 @@ import Defender from './Defender';
 import Enemy from './Enemy';
 import GameGrid from './GameGrid';
 import GameObject from './GameObject';
+import { GameGridObj, TextObj } from './Factory';
 import { collision } from '../util';
 
 interface Scene extends GameObject {
@@ -73,6 +74,7 @@ class Scene extends GameObject implements Scene {
     this.defenders.map((defender) => {
       defender.draw();
 
+      // TODO: add enemy death
       this.enemies.map((enemy) => {
         if (collision(defender, enemy)) {
           enemy.movement = 0;
@@ -90,6 +92,9 @@ class Scene extends GameObject implements Scene {
       if (elm.x < 0) this.gameOver = true;
     });
 
+    // add a new enemy to the gamegrid
+    // TODO: slow this down
+    // TODO: clean this up
     if (this.frame % this.enemiesInterval === 0) {
       const verticalPosition = Math.floor(Math.random() * 5 + 1) * this.cellSize;
       this.enemies.push(new Enemy(this.config, verticalPosition, this.objectSize));
@@ -99,20 +104,32 @@ class Scene extends GameObject implements Scene {
   }
 
   handleGameStatus() {
-    this.ctx.fillStyle = 'gold';
-    this.ctx.font = '30px Arial';
-    this.ctx.fillText(`Resources: ${this.numberOfResources}`, 20, 55);
+    TextObj({
+      config: this.config,
+      size: 30,
+      color: 'gold',
+      text: `Resources: ${this.numberOfResources}`,
+      vector: { x: 20, y: 55 },
+    });
 
     if (this.gameOver) {
-      this.ctx.fillStyle = 'black';
-      this.ctx.font = '60px Arial';
-      this.ctx.fillText('GAME OVER', 135, 330);
+      TextObj({
+        config: this.config,
+        text: 'GAME OVER',
+        size: 60,
+        color: 'black',
+        vector: { x: 135, y: 330 },
+      });
     }
   }
 
   start() {
-    this.gameGrid = new GameGrid(this.config, this.cellSize, this.objectSize, this.cellGap);
-    this.gameGrid.createGrid();
+    this.gameGrid = GameGridObj({
+      config: this.config,
+      cellSize: this.cellSize,
+      objectSize: this.objectSize,
+      cellGap: this.cellGap,
+    });
     this.addListeners();
     this.animate();
   }

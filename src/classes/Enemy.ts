@@ -1,5 +1,6 @@
 import Cell from './Cell';
 import GameObject from './GameObject';
+import { TextObj } from './Factory';
 
 interface Enemy extends Cell, GameObject {
   canvasWidth: number;
@@ -12,6 +13,7 @@ interface Enemy extends Cell, GameObject {
 class Enemy extends GameObject implements Enemy {
   constructor(config: GameObject, verticalPosition: number, size: number) {
     super(config);
+    this.config = config;
     this.ctx = config.ctx;
     this.health = 100;
     this.height = size;
@@ -23,12 +25,24 @@ class Enemy extends GameObject implements Enemy {
     this.y = verticalPosition;
   }
 
-  draw() {
+  drawBody() {
     this.ctx.fillStyle = 'red';
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.ctx.fillStyle = 'black';
-    this.ctx.font = '30px Arial';
-    this.ctx.fillText(`${Math.floor(this.health)}`, this.x + 15, this.y + 30);
+  }
+
+  drawText() {
+    TextObj({
+      config: this.config,
+      text: `${Math.floor(this.health)}`,
+      size: 30,
+      color: 'black',
+      vector: { x: this.x + 15, y: this.y + 30 },
+    });
+  }
+
+  draw() {
+    this.drawBody();
+    this.drawText();
   }
 
   update() {

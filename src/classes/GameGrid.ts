@@ -2,16 +2,19 @@ import Cell from './Cell';
 import GameObject from './GameObject';
 import { collision } from '../util';
 
-interface GameGrid extends GameObject {
+type GameGridTypes = {
   cellGap: number;
   cellSize: number;
   config: GameObject;
-  gameGrid: Array<Cell>;
   objectSize: number;
+};
+
+interface GameGrid extends GameObject, GameGridTypes {
+  gameGrid: Array<Cell>;
 }
 
 class GameGrid extends GameObject implements GameGrid {
-  constructor(config: GameObject, cellSize: number, objectSize: number, cellGap: number) {
+  constructor({ config, cellSize, objectSize, cellGap }: GameGridTypes) {
     super(config);
     this.cellGap = cellGap;
     this.cellSize = cellSize;
@@ -41,4 +44,5 @@ class GameGrid extends GameObject implements GameGrid {
   }
 }
 
+export type { GameGridTypes };
 export default GameGrid;

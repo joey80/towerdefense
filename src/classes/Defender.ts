@@ -1,5 +1,6 @@
 import Cell from './Cell';
 import GameObject from './GameObject';
+import { TextObj } from './Factory';
 
 interface Defender extends Cell, GameObject {
   health: number;
@@ -11,6 +12,7 @@ interface Defender extends Cell, GameObject {
 class Defender extends GameObject implements Defender {
   constructor(config: GameObject, x: number, y: number, size: number) {
     super(config);
+    this.config = config;
     this.ctx = config.ctx;
     this.health = 100;
     this.height = size;
@@ -22,12 +24,24 @@ class Defender extends GameObject implements Defender {
     this.y = y;
   }
 
-  draw() {
+  drawBody() {
     this.ctx.fillStyle = 'blue';
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.ctx.fillStyle = 'gold';
-    this.ctx.font = '30px Arial';
-    this.ctx.fillText(`${Math.floor(this.health)}`, this.x + 15, this.y + 30);
+  }
+
+  drawText() {
+    TextObj({
+      config: this.config,
+      size: 30,
+      color: 'gold',
+      text: `${Math.floor(this.health)}`,
+      vector: { x: this.x + 15, y: this.y + 30 },
+    });
+  }
+
+  draw() {
+    this.drawBody();
+    this.drawText();
   }
 }
 
