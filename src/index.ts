@@ -1,4 +1,4 @@
-import { MouseObj, SceneObj } from './classes/Factory';
+import { Mouse, Scene } from './classes/Factory';
 
 // setup canvas on DOM
 const canvas = document.getElementById('canvas1') as HTMLCanvasElement;
@@ -7,8 +7,8 @@ canvas.width = 900;
 canvas.height = 600;
 
 // start mouse tracking/event listeners
-const mouse = MouseObj(canvas);
+const mouse = Mouse(canvas);
 
 // create global config and create scene
 const config = { canvas, ctx, mouse };
-SceneObj(config);
+Scene(config);

@@ -1,28 +1,33 @@
-import Cell from './Cell';
-import GameObject from './GameObject';
-import { TextObj } from './Factory';
+import Character, { CharacterTypes } from './Character';
+import { Text } from './Factory';
 
-interface Enemy extends Cell, GameObject {
-  canvasWidth: number;
+type EnemyTypes = {
   health: number;
   maxHealth: number;
-  speed: number;
   movement: number;
-}
+  speed: number;
+};
 
-class Enemy extends GameObject implements Enemy {
-  constructor(config: GameObject, verticalPosition: number, size: number) {
-    super(config);
+interface Enemy extends Character, CharacterTypes, EnemyTypes {}
+
+class Enemy extends Character implements Enemy {
+  constructor({ config, height, width, x, y }: CharacterTypes) {
+    super({ config, height, width, x, y });
     this.config = config;
     this.ctx = config.ctx;
     this.health = 100;
-    this.height = size;
+    this.height = height;
     this.maxHealth = this.health;
-    this.speed = Math.random() * 0.2 + 0.4;
+    this.speed = 0.2;
     this.movement = this.speed;
-    this.width = size;
-    this.x = config.canvas.width;
-    this.y = verticalPosition;
+    this.width = width;
+    this.x = x;
+    this.y = y;
+  }
+
+  draw() {
+    this.drawBody();
+    this.drawText();
   }
 
   drawBody() {
@@ -31,7 +36,7 @@ class Enemy extends GameObject implements Enemy {
   }
 
   drawText() {
-    TextObj({
+    Text({
       config: this.config,
       text: `${Math.floor(this.health)}`,
       size: 30,
@@ -40,14 +45,10 @@ class Enemy extends GameObject implements Enemy {
     });
   }
 
-  draw() {
-    this.drawBody();
-    this.drawText();
-  }
-
   update() {
     this.x -= this.movement;
   }
 }
 
+export type { EnemyTypes };
 export default Enemy;

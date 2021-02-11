@@ -1,27 +1,27 @@
-import Cell from './Cell';
-import GameObject from './GameObject';
-import { TextObj } from './Factory';
+import Character, { CharacterTypes } from './Character';
+import { Text } from './Factory';
 
-interface Defender extends Cell, GameObject {
+type DefenderTypes = {
   health: number;
-  projectiles: Array<any>;
-  shooting: boolean;
-  timer: number;
-}
+};
 
-class Defender extends GameObject implements Defender {
-  constructor(config: GameObject, x: number, y: number, size: number) {
-    super(config);
+interface Defender extends Character, CharacterTypes, DefenderTypes {}
+
+class Defender extends Character implements Defender {
+  constructor({ config, height, width, x, y }: CharacterTypes) {
+    super({ config, height, width, x, y });
     this.config = config;
     this.ctx = config.ctx;
     this.health = 100;
-    this.height = size;
-    this.projectiles = [];
-    this.shooting = false;
-    this.timer = 0;
-    this.width = size;
+    this.height = height;
+    this.width = width;
     this.x = x;
     this.y = y;
+  }
+
+  draw() {
+    this.drawBody();
+    this.drawText();
   }
 
   drawBody() {
@@ -30,7 +30,7 @@ class Defender extends GameObject implements Defender {
   }
 
   drawText() {
-    TextObj({
+    Text({
       config: this.config,
       size: 30,
       color: 'gold',
@@ -38,11 +38,7 @@ class Defender extends GameObject implements Defender {
       vector: { x: this.x + 15, y: this.y + 30 },
     });
   }
-
-  draw() {
-    this.drawBody();
-    this.drawText();
-  }
 }
 
+export type { DefenderTypes };
 export default Defender;

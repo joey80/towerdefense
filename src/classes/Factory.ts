@@ -1,31 +1,31 @@
-import GameGrid, { GameGridTypes } from './GameGrid';
+import GameGridClass, { GameGridTypes } from './GameGrid';
 import GameObject from './GameObject';
-import Mouse from './Mouse';
-import Scene from './Scene';
-import Text, { TextTypes } from './Text';
+import MouseClass from './Mouse';
+import SceneClass from './Scene';
+import TextClass, { TextTypes } from './Text';
 
-const GameGridObj = ({ config, cellSize, objectSize, cellGap }: GameGridTypes) => {
-  const gamegrid = new GameGrid({ config, cellSize, objectSize, cellGap });
+const GameGrid = ({ config, cellSize, objectSize, cellGap }: GameGridTypes) => {
+  const gamegrid = new GameGridClass({ config, cellSize, objectSize, cellGap });
   gamegrid.createGrid();
   return gamegrid;
 };
 
-const MouseObj = (canvas: HTMLCanvasElement) => {
-  const mouse = new Mouse(canvas);
+const Mouse = (canvas: HTMLCanvasElement) => {
+  const mouse = new MouseClass(canvas);
   mouse.start();
   return mouse;
 };
 
-const SceneObj = (config: GameObject) => {
-  const scene = new Scene(config);
+const Scene = (config: GameObject) => {
+  const scene = new SceneClass(config);
   scene.start();
   return scene;
 };
 
-const TextObj = ({ config, text, size, color, vector }: TextTypes) => {
-  const textobj = new Text({ config, text, size, color, vector });
+const Text = ({ config, text, size, color, vector }: TextTypes) => {
+  const textobj = new TextClass({ config, text, size, color, vector });
   textobj.draw();
   return textobj;
 };
 
-export { GameGridObj, MouseObj, SceneObj, TextObj };
+export { GameGrid, Mouse, Scene, Text };

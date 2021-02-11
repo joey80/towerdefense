@@ -1,23 +1,25 @@
-import Defender from './Defender';
-import Enemy from './Enemy';
-import GameGrid from './GameGrid';
+import FiringDefender from './FiringDefender';
+import FiringEnemy from './FiringEnemy';
+import GameGridClass from './GameGrid';
 import GameObject from './GameObject';
-import { GameGridObj, TextObj } from './Factory';
+import Projectiles from './Projectiles';
+import { GameGrid, Text } from './Factory';
 import { collision } from '../util';
 
 interface Scene extends GameObject {
   cellGap: number;
   cellSize: number;
   config: GameObject;
-  defenders: Array<Defender>;
-  enemies: Array<Enemy>;
+  defenders: Array<FiringDefender>;
+  enemies: Array<FiringEnemy>;
   enemiesInterval: number;
   enemyPositions: Array<number>;
   frame: number;
-  gameGrid: GameGrid | null;
+  gameGrid: GameGridClass | null;
   gameOver: boolean;
   numberOfResources: number;
   objectSize: number;
+  projectiles: Array<Projectiles>;
 }
 
 class Scene extends GameObject implements Scene {
@@ -28,13 +30,14 @@ class Scene extends GameObject implements Scene {
     this.config = config;
     this.defenders = [];
     this.enemies = [];
-    this.enemiesInterval = 600;
+    this.enemiesInterval = 2400;
     this.enemyPositions = [];
     this.frame = 0;
     this.gameGrid = null;
     this.gameOver = false;
     this.numberOfResources = 300;
     this.objectSize = 100 - 3 * 2;
+    this.projectiles = [];
   }
 
   addListeners() {
@@ -52,7 +55,16 @@ class Scene extends GameObject implements Scene {
 
       // TODO: clean this up
       if (this.numberOfResources >= defenderCost) {
-        this.defenders.push(new Defender(this.config, gridPosX, gridPosY, this.objectSize));
+        this.defenders.push(
+          new FiringDefender({
+            config: this.config,
+            height: this.objectSize,
+            projectileType: 'black',
+            width: this.objectSize,
+            x: gridPosX,
+            y: gridPosY,
+          })
+        );
         this.numberOfResources -= defenderCost;
       }
     });
@@ -71,14 +83,20 @@ class Scene extends GameObject implements Scene {
   }
 
   handleDefenders() {
-    this.defenders.map((defender) => {
+    this.defenders.map((defender, index) => {
       defender.draw();
 
-      // TODO: add enemy death
       this.enemies.map((enemy) => {
+        // if fighting
         if (collision(defender, enemy)) {
           enemy.movement = 0;
           defender.health -= 0.2;
+        }
+
+        // defender killed
+        if (defender.health <= 0) {
+          this.defenders.splice(index, 1);
+          enemy.movement = enemy.speed;
         }
       });
     });
@@ -93,18 +111,27 @@ class Scene extends GameObject implements Scene {
     });
 
     // add a new enemy to the gamegrid
-    // TODO: slow this down
     // TODO: clean this up
     if (this.frame % this.enemiesInterval === 0) {
       const verticalPosition = Math.floor(Math.random() * 5 + 1) * this.cellSize;
-      this.enemies.push(new Enemy(this.config, verticalPosition, this.objectSize));
+      this.enemies.push(
+        new FiringEnemy({
+          config: this.config,
+          height: this.objectSize,
+          projectileType: 'black',
+          width: this.objectSize,
+          x: this.canvas.width,
+          y: verticalPosition,
+        })
+      );
       this.enemyPositions.push(verticalPosition);
-      if (this.enemiesInterval > 120) this.enemiesInterval -= 50;
+      // TODO: do we really need this bit?
+      // if (this.enemiesInterval > 30000) this.enemiesInterval -= 50;
     }
   }
 
   handleGameStatus() {
-    TextObj({
+    Text({
       config: this.config,
       size: 30,
       color: 'gold',
@@ -113,7 +140,7 @@ class Scene extends GameObject implements Scene {
     });
 
     if (this.gameOver) {
-      TextObj({
+      Text({
         config: this.config,
         text: 'GAME OVER',
         size: 60,
@@ -123,8 +150,19 @@ class Scene extends GameObject implements Scene {
     }
   }
 
+  handleProjectiles() {
+    this.projectiles.map((elm, index) => {
+      elm.update();
+      elm.draw();
+
+      if (elm && elm.x > this.canvas.width - this.cellSize) {
+        this.projectiles.splice(index, 1);
+      }
+    });
+  }
+
   start() {
-    this.gameGrid = GameGridObj({
+    this.gameGrid = GameGrid({
       config: this.config,
       cellSize: this.cellSize,
       objectSize: this.objectSize,
