@@ -2,7 +2,7 @@ import FiringDefender from './FiringDefender';
 import FiringEnemy from './FiringEnemy';
 import GameGridClass from './GameGrid';
 import GameObject from './GameObject';
-import Projectiles from './Projectiles';
+// import Projectiles from './Projectiles';
 import { GameGrid, Text } from './Factory';
 import { collision } from '../util';
 
@@ -19,7 +19,7 @@ interface Scene extends GameObject {
   gameOver: boolean;
   numberOfResources: number;
   objectSize: number;
-  projectiles: Array<Projectiles>;
+  // projectiles: Array<Projectiles>;
 }
 
 class Scene extends GameObject implements Scene {
@@ -37,7 +37,7 @@ class Scene extends GameObject implements Scene {
     this.gameOver = false;
     this.numberOfResources = 300;
     this.objectSize = 100 - 3 * 2;
-    this.projectiles = [];
+    // this.projectiles = [];
   }
 
   addListeners() {
@@ -112,6 +112,7 @@ class Scene extends GameObject implements Scene {
 
     // add a new enemy to the gamegrid
     // TODO: clean this up
+    // TODO: need a better way to handle gameloop timing
     if (this.frame % this.enemiesInterval === 0) {
       const verticalPosition = Math.floor(Math.random() * 5 + 1) * this.cellSize;
       this.enemies.push(
@@ -150,16 +151,16 @@ class Scene extends GameObject implements Scene {
     }
   }
 
-  handleProjectiles() {
-    this.projectiles.map((elm, index) => {
-      elm.update();
-      elm.draw();
+  // handleProjectiles() {
+  //   this.projectiles.map((elm, index) => {
+  //     elm.update();
+  //     elm.draw();
 
-      if (elm && elm.x > this.canvas.width - this.cellSize) {
-        this.projectiles.splice(index, 1);
-      }
-    });
-  }
+  //     if (elm && elm.x > this.canvas.width - this.cellSize) {
+  //       this.projectiles.splice(index, 1);
+  //     }
+  //   });
+  // }
 
   start() {
     this.gameGrid = GameGrid({

@@ -1,6 +1,6 @@
 import GameObject from './GameObject';
 
-type ProjectilesType = {
+type ProjectileType = {
   config: GameObject;
   power: number;
   size: number;
@@ -9,10 +9,10 @@ type ProjectilesType = {
   y: number;
 };
 
-interface Projectiles extends GameObject, ProjectilesType {}
+interface Projectile extends GameObject, ProjectileType {}
 
-class Projectiles extends GameObject {
-  constructor({ config, x, y }: ProjectilesType) {
+class Projectile extends GameObject {
+  constructor({ config, x, y }: ProjectileType) {
     super(config);
     this.config = config;
     this.power = 20;
@@ -34,4 +34,5 @@ class Projectiles extends GameObject {
   }
 }
 
-export default Projectiles;
+export type { ProjectileType };
+export default Projectile;

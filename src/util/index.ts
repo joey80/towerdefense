@@ -13,4 +13,14 @@ const collision = (first: GameObjectType, second: GameObjectType) => {
   );
 };
 
-export { collision };
+const collisionArray = (firstArr: Array<any>, secondArr: Array<any>) => {
+  for (let i = 0; i <= firstArr.length; i++) {
+    for (let j = 0; j <= secondArr.length; j++) {
+    if (collision(firstArr[i], secondArr[j])) {
+      return true
+    }}
+  }
+  return false
+}
+
+export { collision, collisionArray };

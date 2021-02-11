@@ -1,7 +1,9 @@
 import Defender from './Defender';
 import { CharacterTypes } from './Character';
+import { ProjectileType } from './Projectile';
 
-interface FiringDefenderTypes extends CharacterTypes {
+interface FiringDefenderTypes extends CharacterTypes, ProjectileType {
+  projectiles: Array<ProjectileType>;
   projectileType: string;
   timer: number;
 }
@@ -13,6 +15,7 @@ class FiringDefender extends Defender implements FiringDefender {
     super({ config, height, width, x, y });
     this.config = config;
     this.height = height;
+    this.projectiles = [];
     this.projectileType = projectileType;
     this.timer = 0;
     this.width = width;
