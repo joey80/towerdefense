@@ -8,7 +8,7 @@ type CharacterTypes = {
   y: number;
 };
 
-interface Character extends GameObject, Pick<CharacterTypes, 'height' | 'width' | 'x' | 'y'> {}
+interface Character extends GameObject, Omit<CharacterTypes, 'config'> {}
 
 class Character extends GameObject implements Character {
   constructor({ config, height, width, x, y }: CharacterTypes) {
