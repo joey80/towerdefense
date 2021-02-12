@@ -11,7 +11,6 @@ class Defender extends Character implements Defender {
   constructor({ config, height, width, x, y }: CharacterTypes) {
     super({ config, height, width, x, y });
     this.config = config;
-    this.ctx = config.ctx;
     this.health = 100;
     this.height = height;
     this.width = width;

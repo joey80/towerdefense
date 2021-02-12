@@ -1,9 +1,9 @@
 import Defender from './Defender';
 import { CharacterTypes } from './Character';
-import { ProjectileType } from './Projectile';
+import Projectile from './Projectile';
 
-interface FiringDefenderTypes extends CharacterTypes, ProjectileType {
-  projectiles: Array<ProjectileType>;
+interface FiringDefenderTypes extends CharacterTypes {
+  projectiles: Array<Projectile>;
   projectileType: string;
   timer: number;
 }
@@ -11,7 +11,14 @@ interface FiringDefenderTypes extends CharacterTypes, ProjectileType {
 interface FiringDefender extends Defender, FiringDefenderTypes {}
 
 class FiringDefender extends Defender implements FiringDefender {
-  constructor({ config, height, projectileType, width, x, y }: Omit<FiringDefenderTypes, 'timer'>) {
+  constructor({
+    config,
+    height,
+    projectileType,
+    width,
+    x,
+    y,
+  }: Omit<FiringDefenderTypes, 'power' | 'projectiles' | 'timer'>) {
     super({ config, height, width, x, y });
     this.config = config;
     this.height = height;
@@ -21,6 +28,28 @@ class FiringDefender extends Defender implements FiringDefender {
     this.width = width;
     this.x = x;
     this.y = y;
+  }
+
+  drawProjectile() {
+    this.projectiles.map(elm => {
+      elm.draw();
+      elm.update();
+    });
+  }
+
+  update() {
+    this.timer++;
+    this.drawProjectile();
+
+    if (this.timer % 100 === 0) {
+      this.projectiles.push(
+        new Projectile({
+          config: this.config,
+          x: this.x + 50,
+          y: this.y + 50,
+        })
+      );
+    }
   }
 }
 

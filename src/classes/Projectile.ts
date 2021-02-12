@@ -12,14 +12,13 @@ type ProjectileType = {
 interface Projectile extends GameObject, ProjectileType {}
 
 class Projectile extends GameObject {
-  constructor({ config, x, y }: ProjectileType) {
+  constructor({ config, x, y }: Omit<ProjectileType, 'power' | 'size' | 'speed'>) {
     super(config);
-    this.config = config;
     this.power = 20;
     this.size = 10;
-    this.speed = 5;
+    this.speed = 0.5;
     this.x = x;
-    this.y, y;
+    this.y = y;
   }
 
   draw() {

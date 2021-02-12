@@ -13,7 +13,6 @@ interface Text extends GameObject, TextTypes {}
 class Text extends GameObject implements Text {
   constructor({ config, text, size = 30, color = 'gold', vector }: TextTypes) {
     super(config);
-    this.ctx = config.ctx;
     this.text = text;
     this.size = size;
     this.color = color;
