@@ -4,6 +4,7 @@ import GameGridClass from './GameGrid';
 import GameObject from './GameObject';
 import { GameGrid, Text } from './Factory';
 import { collision } from '../util';
+import Timer from './Engine/Timer';
 
 interface Scene extends GameObject {
   cellGap: number;
@@ -18,6 +19,7 @@ interface Scene extends GameObject {
   gameOver: boolean;
   numberOfResources: number;
   objectSize: number;
+  timer: Timer | null;
 }
 
 class Scene extends GameObject implements Scene {
@@ -28,13 +30,14 @@ class Scene extends GameObject implements Scene {
     this.config = config;
     this.defenders = [];
     this.enemies = [];
-    this.enemiesInterval = 2400;
+    this.enemiesInterval = 1400;
     this.enemyPositions = [];
     this.frame = 0;
     this.gameGrid = null;
     this.gameOver = false;
     this.numberOfResources = 300;
     this.objectSize = 100 - 3 * 2;
+    this.timer = null;
   }
 
   addListeners() {
@@ -76,7 +79,7 @@ class Scene extends GameObject implements Scene {
     this.handleEnemies();
     this.handleGameStatus();
     this.frame = this.frame + 1;
-    if (!this.gameOver) requestAnimationFrame(() => this.animate());
+    if (this.gameOver && this.timer) this.timer.stop();
   }
 
   handleDefenders() {
@@ -157,7 +160,8 @@ class Scene extends GameObject implements Scene {
       cellGap: this.cellGap,
     });
     this.addListeners();
-    this.animate();
+    this.timer = new Timer({ deltaTime: 1 / 60, update: () => this.animate() });
+    this.timer.start();
   }
 }
 

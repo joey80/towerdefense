@@ -17,7 +17,7 @@ class Enemy extends Character implements Enemy {
     this.health = 100;
     this.height = height;
     this.maxHealth = this.health;
-    this.speed = 0.2;
+    this.speed = 0.35;
     this.movement = this.speed;
     this.width = width;
     this.x = x;
