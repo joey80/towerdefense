@@ -30,7 +30,7 @@ class Scene extends GameObject implements Scene {
     this.config = config;
     this.defenders = [];
     this.enemies = [];
-    this.enemiesInterval = 1400;
+    this.enemiesInterval = 700;
     this.enemyPositions = [];
     this.frame = 0;
     this.gameGrid = null;
@@ -87,7 +87,20 @@ class Scene extends GameObject implements Scene {
       defender.draw();
       defender.update();
 
-      this.enemies.map(enemy => {
+      this.enemies.map((enemy, enemyIndex) => {
+        // if getting shot
+        for (let i = 0; i <= defender.projectiles.length; i++) {
+          if (collision(defender.projectiles[i], enemy)) {
+            enemy.health -= defender.projectiles[i].power;
+            defender.projectiles.splice(i, 1);
+
+            // enemy killed
+            if (enemy.health <= 0) {
+              this.enemies.splice(enemyIndex, 1);
+            }
+          }
+        }
+
         // if fighting
         if (collision(defender, enemy)) {
           enemy.movement = 0;
@@ -104,7 +117,7 @@ class Scene extends GameObject implements Scene {
   }
 
   handleEnemies() {
-    this.enemies.map(elm => {
+    this.enemies.map((elm) => {
       elm.update();
       elm.draw();
 

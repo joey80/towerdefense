@@ -31,9 +31,14 @@ class FiringDefender extends Defender implements FiringDefender {
   }
 
   drawProjectile() {
-    this.projectiles.map(elm => {
+    this.projectiles.map((elm, index) => {
       elm.draw();
       elm.update();
+
+      // if offscreen
+      if (elm.x >= this.config.canvas.width - 50) {
+        this.projectiles.splice(index, 1);
+      }
     });
   }
 
@@ -45,6 +50,8 @@ class FiringDefender extends Defender implements FiringDefender {
       this.projectiles.push(
         new Projectile({
           config: this.config,
+          height: 10,
+          width: 10,
           x: this.x + 50,
           y: this.y + 50,
         })
