@@ -44,7 +44,6 @@ class FiringDefender extends Defender implements FiringDefender {
 
   update() {
     this.timer++;
-    this.drawProjectile();
 
     if (this.timer % 100 === 0) {
       this.projectiles.push(
