@@ -75,8 +75,8 @@ class Scene extends GameObject implements Scene {
     this.ctx.fillStyle = 'blue';
     this.ctx.fillRect(0, 0, this.canvas.width, this.cellSize);
     this.gameGrid?.drawObjects();
-    this.handleDefenders();
     this.handleEnemies();
+    this.handleDefenders();
     this.handleGameStatus();
     this.frame = this.frame + 1;
     if (this.gameOver && this.timer) this.timer.stop();
@@ -113,6 +113,11 @@ class Scene extends GameObject implements Scene {
           enemy.movement = enemy.speed;
         }
       });
+    });
+
+    // draw projectiles last so they get painted on top
+    this.defenders.map((defender) => {
+      defender.drawProjectile();
     });
   }
 
