@@ -3,8 +3,9 @@ import FiringEnemy from './FiringEnemy';
 import GameGridClass from './GameGrid';
 import GameObject from './GameObject';
 import { GameGrid, Text } from './Factory';
-import { collision } from '../util';
+import Resource from './Resource';
 import Timer from './Engine/Timer';
+import { collision } from '../util';
 
 interface Scene extends GameObject {
   cellGap: number;
@@ -19,6 +20,7 @@ interface Scene extends GameObject {
   gameOver: boolean;
   numberOfResources: number;
   objectSize: number;
+  resources: Array<Resource>;
   timer: Timer | null;
 }
 
@@ -37,6 +39,7 @@ class Scene extends GameObject implements Scene {
     this.gameOver = false;
     this.numberOfResources = 300;
     this.objectSize = 100 - 3 * 2;
+    this.resources = [];
     this.timer = null;
   }
 
@@ -77,6 +80,7 @@ class Scene extends GameObject implements Scene {
     this.gameGrid?.drawObjects();
     this.handleEnemies();
     this.handleDefenders();
+    this.handleResources();
     this.handleGameStatus();
     this.frame = this.frame + 1;
     if (this.gameOver && this.timer) this.timer.stop();
@@ -168,6 +172,22 @@ class Scene extends GameObject implements Scene {
         vector: { x: 135, y: 330 },
       });
     }
+  }
+
+  handleResources() {
+    if (this.frame % 500 === 0) {
+      this.resources.push(
+        new Resource({ config: this.config, amounts: [20, 30, 40], cellSize: this.cellSize })
+      );
+    }
+
+    this.resources.map((elm, index) => {
+      elm.draw();
+      if (this.resources[index] && collision(this.resources[index], this.mouse)) {
+        this.numberOfResources += elm.amount;
+        this.resources.splice(index, 1);
+      }
+    });
   }
 
   start() {
