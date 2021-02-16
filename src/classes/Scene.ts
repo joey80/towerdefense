@@ -32,7 +32,7 @@ class Scene extends GameObject implements Scene {
     this.config = config;
     this.defenders = [];
     this.enemies = [];
-    this.enemiesInterval = 700;
+    this.enemiesInterval = 600;
     this.enemyPositions = [];
     this.frame = 0;
     this.gameGrid = null;
@@ -74,16 +74,20 @@ class Scene extends GameObject implements Scene {
   }
 
   animate() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = 'blue';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.cellSize);
+    this.drawMenu();
     this.gameGrid?.drawObjects();
     this.handleEnemies();
     this.handleDefenders();
     this.handleResources();
     this.handleGameStatus();
     this.frame = this.frame + 1;
-    if (this.gameOver && this.timer) this.timer.stop();
+    if (this.gameOver) this.timer?.stop();
+  }
+
+  drawMenu() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = 'blue';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.cellSize);
   }
 
   handleDefenders() {
@@ -130,6 +134,7 @@ class Scene extends GameObject implements Scene {
       elm.update();
       elm.draw();
 
+      // reached the left edge
       if (elm.x < 0) this.gameOver = true;
     });
 
@@ -150,7 +155,7 @@ class Scene extends GameObject implements Scene {
       );
       this.enemyPositions.push(verticalPosition);
       // TODO: do we really need this bit?
-      // if (this.enemiesInterval > 30000) this.enemiesInterval -= 50;
+      if (this.enemiesInterval > 120) this.enemiesInterval -= 50;
     }
   }
 
