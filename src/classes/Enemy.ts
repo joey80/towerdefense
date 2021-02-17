@@ -38,9 +38,9 @@ class Enemy extends Character implements Enemy {
     Text({
       config: this.config,
       text: `${Math.floor(this.health)}`,
-      size: 30,
       color: 'black',
-      vector: { x: this.x + 15, y: this.y + 30 },
+      x: this.x + this.width / 2,
+      y: this.y + this.height / 2,
     });
   }
 

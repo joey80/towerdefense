@@ -22,8 +22,8 @@ const Scene = (config: GameObject) => {
   return scene;
 };
 
-const Text = ({ config, text, size, color, vector }: TextTypes) => {
-  const textobj = new TextClass({ config, text, size, color, vector });
+const Text = ({ config, text, size, color, x, y }: TextTypes) => {
+  const textobj = new TextClass({ config, text, size, color, x, y });
   textobj.draw();
   return textobj;
 };
