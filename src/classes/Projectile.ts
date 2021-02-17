@@ -14,7 +14,7 @@ class Projectile extends GameObject implements Projectile {
     super(config);
     this.height = height;
     this.power = 20;
-    this.speed = 4;
+    this.speed = 8;
     this.width = width;
     this.x = x;
     this.y = y;
