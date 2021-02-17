@@ -124,13 +124,13 @@ class Scene extends GameObject implements Scene {
     });
 
     // draw projectiles last so they get painted on top
-    this.defenders.map((defender) => {
+    this.defenders.map(defender => {
       defender.drawProjectile();
     });
   }
 
   handleEnemies() {
-    this.enemies.map((elm) => {
+    this.enemies.map(elm => {
       elm.update();
       elm.draw();
 
@@ -162,10 +162,9 @@ class Scene extends GameObject implements Scene {
   handleGameStatus() {
     Text({
       config: this.config,
-      size: 30,
-      color: 'gold',
       text: `Resources: ${this.numberOfResources}`,
-      vector: { x: 20, y: 55 },
+      x: 150,
+      y: 55,
     });
 
     if (this.gameOver) {
@@ -174,7 +173,8 @@ class Scene extends GameObject implements Scene {
         text: 'GAME OVER',
         size: 60,
         color: 'black',
-        vector: { x: 135, y: 330 },
+        x: this.canvas.width / 2,
+        y: this.canvas.height / 2,
       });
     }
   }

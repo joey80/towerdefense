@@ -31,10 +31,9 @@ class Defender extends Character implements Defender {
   drawText() {
     Text({
       config: this.config,
-      size: 30,
-      color: 'gold',
       text: `${Math.floor(this.health)}`,
-      vector: { x: this.x + 15, y: this.y + 30 },
+      x: this.x + this.width / 2,
+      y: this.y + this.height / 2,
     });
   }
 }

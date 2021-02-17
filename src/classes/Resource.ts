@@ -28,7 +28,8 @@ class Resource extends GameObject implements Resource {
       text: `${this.amount}`,
       size: 20,
       color: 'black',
-      vector: { x: this.x + 15, y: this.y + 25 },
+      x: this.x + this.width / 2,
+      y: this.y + this.height / 2,
     });
   }
 }
