@@ -1,7 +1,7 @@
-import GameObject from './GameObject';
+import GameObject, { GOTypes } from './GameObject';
 
 interface Cell {
-  config: GameObject;
+  config: GOTypes;
   height: number;
   width: number;
   x: number;
@@ -9,7 +9,7 @@ interface Cell {
 }
 
 class Cell extends GameObject implements Cell {
-  constructor(config: GameObject, x: number, y: number, size: number) {
+  constructor(config: GOTypes, x: number, y: number, size: number) {
     super(config);
     this.config = config;
     this.height = size;
