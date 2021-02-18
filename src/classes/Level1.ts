@@ -1,46 +1,40 @@
 import FiringDefender from './FiringDefender';
 import FiringEnemy from './FiringEnemy';
 import GameGridClass from './GameGrid';
-import GameObject from './GameObject';
-import { GameGrid, Text } from './Factory';
+import { GOTypes } from './GameObject';
 import Resource from './Resource';
-import Timer from './Engine/Timer';
+import Scene from './Engine/Scene';
+import { GameGrid, Text } from './Factory';
 import { collision } from '../util';
 
-interface Scene extends GameObject {
+interface Level1 extends Scene {
   cellGap: number;
   cellSize: number;
-  config: GameObject;
   defenders: Array<FiringDefender>;
   enemies: Array<FiringEnemy>;
   enemiesInterval: number;
   enemyPositions: Array<number>;
-  frame: number;
   gameGrid: GameGridClass | null;
-  gameOver: boolean;
   numberOfResources: number;
   objectSize: number;
   resources: Array<Resource>;
-  timer: Timer | null;
 }
 
-class Scene extends GameObject implements Scene {
-  constructor(config: GameObject) {
-    super(config);
+class Level1 extends Scene implements Level1 {
+  constructor({ canvas, ctx, mouse }: GOTypes) {
+    super({ canvas, ctx, mouse });
     this.cellGap = 3;
     this.cellSize = 100;
-    this.config = config;
+    this.config = { canvas, ctx, mouse };
     this.defenders = [];
     this.enemies = [];
     this.enemiesInterval = 600;
     this.enemyPositions = [];
     this.frame = 0;
     this.gameGrid = null;
-    this.gameOver = false;
     this.numberOfResources = 300;
     this.objectSize = 100 - 3 * 2;
     this.resources = [];
-    this.timer = null;
   }
 
   addListeners() {
@@ -50,13 +44,12 @@ class Scene extends GameObject implements Scene {
       const defenderCost = 100;
       if (gridPosY < this.cellSize) return;
 
-      // TODO: clean this up
       // cant place defender on top of another
       for (let i = 0; i < this.defenders.length; i++) {
         if (this.defenders[i].x === gridPosX && this.defenders[i].y === gridPosY) return;
       }
 
-      // TODO: clean this up
+      // adding a new defender
       if (this.numberOfResources >= defenderCost) {
         this.defenders.push(
           new FiringDefender({
@@ -73,17 +66,7 @@ class Scene extends GameObject implements Scene {
     });
   }
 
-  animate() {
-    this.drawMenu();
-    this.gameGrid?.drawObjects();
-    this.handleEnemies();
-    this.handleDefenders();
-    this.handleResources();
-    this.handleGameStatus();
-    this.frame = this.frame + 1;
-    if (this.gameOver) this.timer?.stop();
-  }
-
+  // add this to super?
   drawMenu() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.fillStyle = 'blue';
@@ -135,12 +118,10 @@ class Scene extends GameObject implements Scene {
       elm.draw();
 
       // reached the left edge
-      if (elm.x < 0) this.gameOver = true;
+      if (elm.x < 0) this.sceneEnd = true;
     });
 
     // add a new enemy to the gamegrid
-    // TODO: clean this up
-    // TODO: need a better way to handle gameloop timing
     if (this.frame % this.enemiesInterval === 0) {
       const verticalPosition = Math.floor(Math.random() * 5 + 1) * this.cellSize;
       this.enemies.push(
@@ -154,7 +135,7 @@ class Scene extends GameObject implements Scene {
         })
       );
       this.enemyPositions.push(verticalPosition);
-      // TODO: do we really need this bit?
+      // speed up the flow of new enemies
       if (this.enemiesInterval > 120) this.enemiesInterval -= 50;
     }
   }
@@ -167,7 +148,7 @@ class Scene extends GameObject implements Scene {
       y: 55,
     });
 
-    if (this.gameOver) {
+    if (this.sceneEnd) {
       Text({
         config: this.config,
         text: 'GAME OVER',
@@ -188,6 +169,7 @@ class Scene extends GameObject implements Scene {
 
     this.resources.map((elm, index) => {
       elm.draw();
+      // collect a new resource
       if (this.resources[index] && collision(this.resources[index], this.mouse)) {
         this.numberOfResources += elm.amount;
         this.resources.splice(index, 1);
@@ -196,6 +178,8 @@ class Scene extends GameObject implements Scene {
   }
 
   start() {
+    super.start();
+    // add this to super?
     this.gameGrid = GameGrid({
       config: this.config,
       cellSize: this.cellSize,
@@ -203,9 +187,17 @@ class Scene extends GameObject implements Scene {
       cellGap: this.cellGap,
     });
     this.addListeners();
-    this.timer = new Timer({ deltaTime: 1 / 60, update: () => this.animate() });
-    this.timer.start();
+  }
+
+  update() {
+    this.drawMenu();
+    this.gameGrid?.drawObjects();
+    this.handleEnemies();
+    this.handleDefenders();
+    this.handleResources();
+    this.handleGameStatus();
+    super.update();
   }
 }
 
-export default Scene;
+export default Level1;

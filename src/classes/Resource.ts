@@ -1,12 +1,12 @@
 import { CharacterTypes } from './Character';
-import GameObject from './GameObject';
+import GameObject, { GOTypes } from './GameObject';
 import { Text } from './Factory';
 
 interface Resource extends CharacterTypes {
   amount: number;
   amounts: Array<number>;
   cellSize: number;
-  config: GameObject;
+  config: GOTypes;
 }
 
 class Resource extends GameObject implements Resource {

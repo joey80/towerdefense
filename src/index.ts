@@ -1,4 +1,5 @@
-import { Mouse, Scene } from './classes/Factory';
+import Level1 from './classes/Level1';
+import { Mouse } from './classes/Factory';
 
 // setup canvas on DOM
 const canvas = document.getElementById('canvas1') as HTMLCanvasElement;
@@ -9,6 +10,6 @@ canvas.height = 600;
 // start mouse tracking/event listeners
 const mouse = Mouse(canvas);
 
-// create global config and create scene
-const config = { canvas, ctx, mouse };
-Scene(config);
+// create first scene and start
+const level1 = new Level1({ canvas, ctx, mouse });
+level1.start();

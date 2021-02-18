@@ -1,15 +1,15 @@
-import GameObject from './GameObject';
+import GameObject, { GOTypes } from './GameObject';
 
 type TextTypes = {
   color?: string;
-  config: GameObject;
+  config: GOTypes;
   size?: number;
   text: string;
   x: number;
   y: number;
 };
 
-interface Text extends GameObject, TextTypes {}
+interface Text extends GOTypes, TextTypes {}
 
 class Text extends GameObject implements Text {
   constructor({ config, text, size = 30, color, x, y }: TextTypes) {

@@ -1,15 +1,15 @@
 import Cell from './Cell';
-import GameObject from './GameObject';
+import GameObject, { GOTypes } from './GameObject';
 import { collision } from '../util';
 
 type GameGridTypes = {
   cellGap: number;
   cellSize: number;
-  config: GameObject;
+  config: GOTypes;
   objectSize: number;
 };
 
-interface GameGrid extends GameObject, GameGridTypes {
+interface GameGrid extends GOTypes, GameGridTypes {
   gameGrid: Array<Cell>;
 }
 
@@ -32,7 +32,7 @@ class GameGrid extends GameObject implements GameGrid {
   }
 
   drawObjects() {
-    this.gameGrid.map((elm) => {
+    this.gameGrid.map(elm => {
       // debugging grid
       // this.ctx.strokeStyle = 'green';
       // this.ctx.strokeRect(elm.x, elm.y, elm.width, elm.height);

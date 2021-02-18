@@ -1,7 +1,7 @@
 import GameGridClass, { GameGridTypes } from './GameGrid';
 import GameObject from './GameObject';
 import MouseClass from './Mouse';
-import SceneClass from './Scene';
+import SceneClass from './Engine/Scene';
 import TextClass, { TextTypes } from './Text';
 
 const GameGrid = ({ config, cellSize, objectSize, cellGap }: GameGridTypes) => {
