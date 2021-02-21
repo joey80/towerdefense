@@ -26,9 +26,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/joey80/towerdefense.git"
-  },
-  "dependencies": {
-    "classes": "^0.3.0",
-    "src": "^1.1.2"
   }
 }
