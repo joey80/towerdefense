@@ -1,41 +1,25 @@
-import FiringDefender from './FiringDefender';
-import FiringEnemy from './FiringEnemy';
-import GameGridClass from './GameGrid';
-import { GOTypes } from './GameObject';
-import Resource from './Resource';
-import Scene from './Engine/Scene';
-import { GameGrid, Text } from './Factory';
-import { collision } from '../util';
+import FiringDefender from '../FiringDefender';
+import FiringEnemy from '../FiringEnemy';
+import { GOTypes } from '../GameObject';
+import Level from './Level';
+import { collision } from '../../util';
 
-interface Level1 extends Scene {
-  cellGap: number;
-  cellSize: number;
+interface BattleLevel extends Level {
   defenders: Array<FiringDefender>;
   enemies: Array<FiringEnemy>;
   enemiesInterval: number;
   enemyPositions: Array<number>;
-  gameGrid: GameGridClass | null;
-  numberOfResources: number;
-  objectSize: number;
-  resources: Array<Resource>;
 }
 
 // TODO: should game objects have an id?
-class Level1 extends Scene implements Level1 {
+class BattleLevel extends Level implements BattleLevel {
   constructor({ canvas, ctx, mouse }: GOTypes) {
     super({ canvas, ctx, mouse });
-    this.cellGap = 3;
-    this.cellSize = 100;
     this.config = { canvas, ctx, mouse };
     this.defenders = [];
     this.enemies = [];
     this.enemiesInterval = 600;
     this.enemyPositions = [];
-    this.frame = 0;
-    this.gameGrid = null;
-    this.numberOfResources = 300;
-    this.objectSize = 100 - 3 * 2;
-    this.resources = [];
   }
 
   addListeners() {
@@ -67,12 +51,6 @@ class Level1 extends Scene implements Level1 {
     });
   }
 
-  drawMenu() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = 'blue';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.cellSize);
-  }
-
   handleDefenders() {
     this.defenders.map((defender, index) => {
       defender.draw();
@@ -93,6 +71,7 @@ class Level1 extends Scene implements Level1 {
 
             // enemy killed
             if (enemy.health <= 0) {
+              this.numberOfResources += 20;
               // remove from the positions array
               this.enemyPositions.splice(this.enemyPositions.indexOf(enemy.y), 1);
 
@@ -151,63 +130,16 @@ class Level1 extends Scene implements Level1 {
     }
   }
 
-  handleGameStatus() {
-    Text({
-      config: this.config,
-      text: `Resources: ${this.numberOfResources}`,
-      x: 150,
-      y: 55,
-    });
-
-    if (this.sceneEnd) {
-      Text({
-        config: this.config,
-        text: 'GAME OVER',
-        size: 60,
-        color: 'black',
-        x: this.canvas.width / 2,
-        y: this.canvas.height / 2,
-      });
-    }
-  }
-
-  handleResources() {
-    if (this.frame % 500 === 0) {
-      this.resources.push(
-        new Resource({ config: this.config, amounts: [20, 30, 40], cellSize: this.cellSize })
-      );
-    }
-
-    this.resources.map((elm, index) => {
-      elm.draw();
-      // collect a new resource
-      if (this.resources[index] && collision(this.resources[index], this.mouse)) {
-        this.numberOfResources += elm.amount;
-        this.resources.splice(index, 1);
-      }
-    });
-  }
-
   start() {
     super.start();
-    this.gameGrid = GameGrid({
-      config: this.config,
-      cellSize: this.cellSize,
-      objectSize: this.objectSize,
-      cellGap: this.cellGap,
-    });
     this.addListeners();
   }
 
   update() {
-    this.drawMenu();
-    this.gameGrid?.drawObjects();
+    super.update();
     this.handleEnemies();
     this.handleDefenders();
-    this.handleResources();
-    this.handleGameStatus();
-    super.update();
   }
 }
 
-export default Level1;
+export default BattleLevel;

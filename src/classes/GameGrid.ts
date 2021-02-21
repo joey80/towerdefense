@@ -32,7 +32,7 @@ class GameGrid extends GameObject implements GameGrid {
   }
 
   drawObjects() {
-    this.gameGrid.map(elm => {
+    this.gameGrid.map((elm) => {
       // debugging grid
       // this.ctx.strokeStyle = 'green';
       // this.ctx.strokeRect(elm.x, elm.y, elm.width, elm.height);
