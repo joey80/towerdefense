@@ -20,6 +20,7 @@ interface Level1 extends Scene {
   resources: Array<Resource>;
 }
 
+// TODO: should game objects have an id?
 class Level1 extends Scene implements Level1 {
   constructor({ canvas, ctx, mouse }: GOTypes) {
     super({ canvas, ctx, mouse });
@@ -66,7 +67,6 @@ class Level1 extends Scene implements Level1 {
     });
   }
 
-  // add this to super?
   drawMenu() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.fillStyle = 'blue';
@@ -78,6 +78,12 @@ class Level1 extends Scene implements Level1 {
       defender.draw();
       defender.update();
 
+      if (this.enemyPositions.indexOf(defender.y) !== -1) {
+        defender.shooting = true;
+      } else {
+        defender.shooting = false;
+      }
+
       this.enemies.map((enemy, enemyIndex) => {
         // if getting shot
         for (let i = 0; i <= defender.projectiles.length; i++) {
@@ -87,6 +93,10 @@ class Level1 extends Scene implements Level1 {
 
             // enemy killed
             if (enemy.health <= 0) {
+              // remove from the positions array
+              this.enemyPositions.splice(this.enemyPositions.indexOf(enemy.y), 1);
+
+              // remove from the enemy array
               this.enemies.splice(enemyIndex, 1);
             }
           }
@@ -107,13 +117,13 @@ class Level1 extends Scene implements Level1 {
     });
 
     // draw projectiles last so they get painted on top
-    this.defenders.map(defender => {
+    this.defenders.map((defender) => {
       defender.drawProjectile();
     });
   }
 
   handleEnemies() {
-    this.enemies.map(elm => {
+    this.enemies.map((elm) => {
       elm.update();
       elm.draw();
 
@@ -136,6 +146,7 @@ class Level1 extends Scene implements Level1 {
       );
       this.enemyPositions.push(verticalPosition);
       // speed up the flow of new enemies
+      // TODO: limit this to max enemy amount per row at one time
       if (this.enemiesInterval > 120) this.enemiesInterval -= 50;
     }
   }
@@ -179,7 +190,6 @@ class Level1 extends Scene implements Level1 {
 
   start() {
     super.start();
-    // add this to super?
     this.gameGrid = GameGrid({
       config: this.config,
       cellSize: this.cellSize,
