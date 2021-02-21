@@ -1,7 +1,8 @@
 {
   "name": "pvz",
   "version": "0.0.0-development",
-  "description": "test",
+  "description": "tower defense game",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "start": "parcel serve src/index.html",

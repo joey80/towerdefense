@@ -5,6 +5,7 @@ import Projectile from './Projectile';
 interface FiringDefenderTypes extends CharacterTypes {
   projectiles: Array<Projectile>;
   projectileType: string;
+  shooting: boolean;
   timer: number;
 }
 
@@ -18,12 +19,13 @@ class FiringDefender extends Defender implements FiringDefender {
     width,
     x,
     y,
-  }: Omit<FiringDefenderTypes, 'power' | 'projectiles' | 'timer'>) {
+  }: Omit<FiringDefenderTypes, 'power' | 'projectiles' | 'shooting' | 'timer'>) {
     super({ config, height, width, x, y });
     this.config = config;
     this.height = height;
     this.projectiles = [];
     this.projectileType = projectileType;
+    this.shooting = false;
     this.timer = 0;
     this.width = width;
     this.x = x;
@@ -31,15 +33,17 @@ class FiringDefender extends Defender implements FiringDefender {
   }
 
   drawProjectile() {
-    this.projectiles.map((elm, index) => {
-      elm.draw();
-      elm.update();
+    if (this.shooting) {
+      this.projectiles.map((elm, index) => {
+        elm.draw();
+        elm.update();
 
-      // if offscreen
-      if (elm.x >= this.config.canvas.width - 50) {
-        this.projectiles.splice(index, 1);
-      }
-    });
+        // if offscreen
+        if (elm.x >= this.config.canvas.width - 50) {
+          this.projectiles.splice(index, 1);
+        }
+      });
+    }
   }
 
   update() {
