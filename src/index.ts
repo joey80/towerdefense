@@ -1,4 +1,4 @@
-import Level1 from './classes/Level1';
+import BattleLevel from './classes/Level/BattleLevel';
 import { Mouse } from './classes/Factory';
 
 // setup canvas on DOM
@@ -11,5 +11,5 @@ canvas.height = 600;
 const mouse = Mouse(canvas);
 
 // create first scene and start
-const level1 = new Level1({ canvas, ctx, mouse });
+const level1 = new BattleLevel({ canvas, ctx, mouse });
 level1.start();

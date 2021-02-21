@@ -10,6 +10,7 @@ interface Scene extends GameObject {
 class Scene extends GameObject implements Scene {
   constructor(config: GOTypes) {
     super(config);
+    this.frame = 0;
     this.sceneEnd = false;
     this.timer = null;
   }
