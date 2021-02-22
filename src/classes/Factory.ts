@@ -22,8 +22,26 @@ const Scene = (config: GameObject) => {
   return scene;
 };
 
-const Text = ({ config, text, size, color, x, y }: TextTypes) => {
-  const textobj = new TextClass({ config, text, size, color, x, y });
+const Text = ({
+  color,
+  config,
+  height,
+  size,
+  text,
+  width,
+  x,
+  y,
+}: Omit<TextTypes, 'height' | 'width'> & { height?: number; width?: number }) => {
+  const textobj = new TextClass({
+    color,
+    config,
+    height: height || 0,
+    size,
+    text,
+    width: width || 0,
+    x,
+    y,
+  });
   textobj.draw();
   return textobj;
 };

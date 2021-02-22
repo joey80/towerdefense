@@ -4,8 +4,16 @@ import Enemy from './Enemy';
 import Mouse from './Mouse';
 import Projectile from './Projectile';
 import Resource from './Resource';
+import Text from './Text';
 
-type GameObjectType = Cell | Defender | Enemy | Mouse | Projectile | Resource;
+type Generic = {
+  height: number;
+  width: number;
+  x: number;
+  y: number;
+};
+
+type GameObjectType = Cell | Defender | Enemy | Generic | Mouse | Projectile | Resource | Text;
 
 type GOTypes = {
   canvas: HTMLCanvasElement;
@@ -26,5 +34,5 @@ class GameObject implements GOTypes {
   }
 }
 
-export type { GameObjectType, GOTypes };
+export type { GameObjectType, Generic, GOTypes };
 export default GameObject;
