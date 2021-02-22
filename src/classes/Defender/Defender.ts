@@ -1,5 +1,5 @@
-import Character, { CharacterTypes } from './Character';
-import { Text } from './Factory';
+import Character, { CharacterTypes } from '../Character';
+import { Text } from '../Factory';
 
 type DefenderTypes = {
   health: number;
