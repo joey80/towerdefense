@@ -1,11 +1,11 @@
-import FiringDefender from '../FiringDefender';
 import FiringEnemy from '../FiringEnemy';
 import { GOTypes } from '../GameObject';
 import Level from './Level';
+import RedDefender from '../Defender/RedDefender';
 import { collision } from '../../util';
 
 interface BattleLevel extends Level {
-  defenders: Array<FiringDefender>;
+  defenders: Array<RedDefender>;
   enemies: Array<FiringEnemy>;
   enemiesInterval: number;
   enemyPositions: Array<number>;
@@ -37,10 +37,9 @@ class BattleLevel extends Level implements BattleLevel {
       // adding a new defender
       if (this.numberOfResources >= defenderCost) {
         this.defenders.push(
-          new FiringDefender({
+          new RedDefender({
             config: this.config,
             height: this.objectSize,
-            projectileType: 'black',
             width: this.objectSize,
             x: gridPosX,
             y: gridPosY,
