@@ -1,5 +1,5 @@
 import Cell from './Cell';
-import Defender from './Defender';
+import Defender from './Defender/Defender';
 import Enemy from './Enemy';
 import Mouse from './Mouse';
 import Projectile from './Projectile';
