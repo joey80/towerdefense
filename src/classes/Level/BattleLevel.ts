@@ -1,4 +1,3 @@
-// import FiringDefender from '../FiringDefender';
 import FiringEnemy from '../FiringEnemy';
 import { GOTypes } from '../GameObject';
 import Level from './Level';
