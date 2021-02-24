@@ -1,3 +1,6 @@
 # Tower Defense engine in Typescript
 
-More information coming soon ...
+## To run the game
+
+- `npm install`
+- `npm run start`
